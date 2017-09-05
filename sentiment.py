@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jul 16 13:54:23 2017
-
 @author: mohitkumar
 """
 
@@ -25,8 +23,6 @@ import configparser
 
 import data_utils
 import lstm_model
-#insert datapreprocessing file
-
 
 tf.app.flags.DEFINE_float("learning_rate", 0.01, "Learning rate.")
 tf.app.flags.DEFINE_float("learning_rate_decay_factor", 0.99,
@@ -49,8 +45,6 @@ tf.app.flags.DEFINE_boolean("self_test", False,
                             "Run a self-test if this is set to True.")
 tf.app.flags.DEFINE_boolean("use_fp16", False,
                             "Train using fp16 instead of fp32.")
-#tf.app.flags.DEFINE_string('checkpoint_dir', 'data/checkpoints/', 'Directory to store/restore checkpoints')
-#tf.app.flags.DEFINE_string('text', None, 'Text to determine sentiment of.')
 tf.app.flags.DEFINE_float('dropout', 0.5, "dropout value")
 
 FLAGS = tf.app.flags.FLAGS
@@ -95,7 +89,7 @@ def train():
         
         np.random.shuffle(tr_set)
         num_batches= int(len(tr_set)/FLAGS.batch_size)
-        #print("num_batches", num_batches)
+        
         # splitting data into train data and val data
         train_data= tr_set[0:int(0.8*len(tr_set))]
         test_data= tr_set[int(0.8 * len(tr_set))+1:len(tr_set)-1]
@@ -121,7 +115,6 @@ def train():
             current_step += 1
             
             if current_step % FLAGS.steps_per_checkpoint == 0:
-                #print("model saver part running")
                 perplexity = math.exp(float(loss)) if loss < 300 else float("inf")
                 print ("global step %d learning rate %.4f step-time %.2f perplexity "
                "%.2f" % (model.global_step.eval(), model.learning_rate.eval(),
