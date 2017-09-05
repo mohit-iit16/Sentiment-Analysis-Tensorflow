@@ -94,7 +94,6 @@ class SentimentModel(object):
         self.mean_loss = tf.reduce_mean(self.losses)
         #self.losses, sum_loss, mean_loss= loss(self.scores, self.output)
         
-        #self.accuracy=tf.reduce_mean(tf.cast(tf.equal(self.prediction, tf.argmax(self.output)), tf.float32), name= "accuracy")
         self.correct_predictions = tf.equal(self.prediction, tf.argmax(self.output, 1))
         self.accuracy = tf.reduce_mean(tf.cast(self.correct_predictions, "float"), name="accuracy")
         
@@ -115,10 +114,7 @@ class SentimentModel(object):
         
         
     def step(self, session, inputs, outputs, input_length, forward_only= False):
-        #print("running a sentiment step")
-        #print("input shape", inputs.shape)
-        #print("output_shape", outputs.shape)
-        #print("input_length", input_length.shape)
+       
         input_feed={}
         
         input_feed[self.input.name]= inputs
@@ -128,7 +124,7 @@ class SentimentModel(object):
         input_feed[self.dropout_keep_embedd_prob.name]= self.dropout
         input_feed[self.dropout_keep_input_prob.name]=self.dropout
         input_feed[self.dropout_keep_output_prob.name]=self.dropout
-        #print("input feed", input_feed)
+       
         if not forward_only:
             output_feed= [self.updates,  # Update Op that does SGD.
                      self.gradient_norms,  # Gradient norm.
@@ -138,7 +134,7 @@ class SentimentModel(object):
             output_feed= [self.mean_loss, self.y, self.accuracy]
             
         outputs= session.run(output_feed, input_feed)
-        #print("session run finished in step")
+        
         if not forward_only:
             return outputs[1], outputs[2], None
         else:
@@ -153,43 +149,28 @@ class SentimentModel(object):
             self.test_batch_no=0
         
     def get_batch(self, train_data, test_data= None):
-        #print("running get_batch")
         num_classes=2
         
             
         if not test_data:
-        
-            #tr_batch_no=current_step_record()
-            #print("train_data_size", train_data.shape)
-            
-            #print("train_transpose", train_data.transpose().shape)
             train_targets = (train_data.transpose()[-1]).transpose()
             train_ohe= np.eye(num_classes)[train_targets]
-            #print("target inputs", train_targets)
-            #print("shape", train_targets.shape)
             
             train_input_size= (train_data.transpose()[-2]).transpose()
             train_input= (train_data.transpose()[0:-2]).transpose()
             
             train_num_batches= len(train_input)/self.batch_size
-            #if self.train_batch_no==0:
-                #print("train_batch_no", self.train_batch_no+1)
-            #else:
-                #print("train batch_no", (self.train_batch_no/200)+1)
+           
             input_batch= train_input[self.train_batch_no:self.train_batch_no+200]
             output_batch= train_ohe[self.train_batch_no: self.train_batch_no+200]
             input_size_batch= train_input_size[self.train_batch_no:self.train_batch_no+200]
             self.train_batch_no+=200
             self.train_batch_no = self.train_batch_no % len(train_data)
             
-            #print("train_batch_size", input_batch.shape)
-            #print("train output size", output_batch.shape)
+           
             return input_batch, output_batch, input_size_batch
         
         else:
-            #print("tst batch_no", tst_batch_no)
-            
-            #print("test_data", test_data.shape)
             test_targets= (test_data.transpose()[-1]).transpose()
             test_ohe= np.eye(num_classes)[test_targets]
             
@@ -198,18 +179,12 @@ class SentimentModel(object):
             test_num_batches= len(test_input)/self.batch_size
             
             test_input= test_input[:len(test_input)-(len(test_input)%self.batch_size)]
-            #if self.test_batch_no==0:
-                #print("test batch_no", self.test_batch_no+1)
-            #else:
-                #print("test batch_no", (self.test_batch_no/200)+1)
+           
             test_input_batch= test_input[self.test_batch_no:self.test_batch_no+200]
             test_output_batch= test_ohe[self.test_batch_no: self.test_batch_no+200]
             test_input_size_batch= test_input_size[self.test_batch_no:self.test_batch_no+200]
             self.test_batch_no+=200
-            #self.test_batch_no = self.test_batch_no % len(self.test_data)
-            
-            #print("test_input_size",test_input_batch.shape )
-            
+           
             return test_input_batch, test_output_batch, test_input_size_batch
             
           
