@@ -34,8 +34,8 @@ tf.app.flags.DEFINE_integer("hidden_size", 50, "Size of each model layer.")
 tf.app.flags.DEFINE_integer("max_epoch", 50, "no of epochs to run.")
 tf.app.flags.DEFINE_integer("num_layers", 2, "Number of layers in the model.")
 tf.app.flags.DEFINE_integer("vocabulary_size", 40000, "English vocabulary size.")
-tf.app.flags.DEFINE_string("data_dir", "/Users/mohitkumar/Desktop/sentiment-analysis/aclImdb/train", "Data directory")
-tf.app.flags.DEFINE_string("train_dir", "/Users/mohitkumar/Desktop/sentiment-analysis/aclImdb/train", "Training directory.")
+tf.app.flags.DEFINE_string("data_dir", "/tmp", "Data directory")
+tf.app.flags.DEFINE_string("train_dir", "/tmp", "Training directory.")
 tf.app.flags.DEFINE_integer("max_seq_size", 200,
                             "Limit on the size of training data.")
 tf.app.flags.DEFINE_integer("steps_per_checkpoint", 50,
